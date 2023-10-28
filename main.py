@@ -150,9 +150,12 @@ if __name__ == '__main__':
     playlist_link = "https://open.spotify.com/playlist/37i9dQZEVXbNG2KDcFcKOF?si=3ba7f1262cdb41aa"
     json_file_path = "spotify_data.json"
 
-    # Call the main function with the JSON file path as a parameter
-    song_df = main(playlist_link, json_file_path)[0]
-    album_df = main(playlist_link, json_file_path)[1]
-    artist_df = main(playlist_link, json_file_path)[2]
+    # Call the main function with the JSON file path as a arguments
+    # song_df = main(playlist_link, json_file_path)[0]
+    # album_df = main(playlist_link, json_file_path)[1]
+    # artist_df = main(playlist_link, json_file_path)[2]
+
+    # tuples unpacking for multiple return values
+    song_df, album_df, artist_df = main(playlist_link, json_file_path)
     print(song_df)
     # song_df, album_df, artist_df = main(playlist_link, json_file_path)
