@@ -97,25 +97,18 @@ def validate_dataframes(song_df, album_df, artist_df):
 
 # Function to change date columns to datetime format
 def transform_dateframes(song_df, album_df, artist_df):
-    """ To transfrom date in DataFrames """
-    # Check if 'added_at' column is not already in datetime format
-    if not pd.api.types.is_datetime64_ns_dtype(song_df['added_at']):
-        song_df['added_at'] = pd.to_datetime(song_df['added_at'])
-
-    # Remove the timezone information
-    song_df['added_at'] = song_df['added_at'].dt.tz_localize(None)
-
-    # Check and convert the 'release_date' column in the album_df
-    if not pd.api.types.is_datetime64_ns_dtype(album_df['release_date']):
-        album_df['release_date'] = pd.to_datetime(album_df['release_date'])
-
-    # Remove the timezone information
-    album_df['release_date'] = album_df['release_date'].dt.tz_localize(None)
+    """ To transform date in DataFrames """
+    song_df['added_at'] = pd.to_datetime(song_df['added_at'])
+    album_df['release_date'] = pd.to_datetime(album_df['release_date'])
 
 
 # Function to create and save Excel files for each DataFrame
 def export_dataframes(song_df, album_df, artist_df):
     """ To  create and save dataframes into Excel files """
+    # remove datetime -> timezone information to match excel time format
+    song_df['added_at'] = song_df['added_at'].dt.tz_localize(None)
+    album_df['release_date'] = album_df['release_date'].dt.tz_localize(None)
+
     song_df.to_excel("files/song_data.xlsx", index=False)
     album_df.to_excel("files/album_data.xlsx", index=False)
     artist_df.to_excel("files/artist_data.xlsx", index=False)
