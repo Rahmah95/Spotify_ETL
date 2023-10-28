@@ -84,15 +84,31 @@ def extract_song_data(data):
 # Function to validate and clean dataframes
 def validate_dataframes(song_df, album_df, artist_df):
     """ To validate and clean dataframes """
-    # Remove duplicate rows based on 'song_id', 'album_id', and 'artist_id' columns
+    # Remove duplicate rows based on 'song_id', 'album_id', and 'artist_id' (primary keys)
     song_df.drop_duplicates(subset='song_id', inplace=True)
     album_df.drop_duplicates(subset='album_id', inplace=True)
     artist_df.drop_duplicates(subset='artist_id', inplace=True)
-
+    #
     # Remove rows with any null values in the DataFrames
     song_df.dropna(how='any', inplace=True)
     album_df.dropna(how='any', inplace=True)
     artist_df.dropna(how='any', inplace=True)
+
+    # # validate that there are no duplicate primary keys if any raise an exception
+    # if not pd.Series(song_df['song_id']).is_unique:
+    #     raise Exception("Duplicate entries found in 'played_at' column.")
+    # if not pd.Series(album_df['album_id']).is_unique:
+    #     raise Exception("Duplicate entries found in 'album_id' column.")
+    # if not pd.Series(artist_df['artist_id']).is_unique:
+    #     raise Exception("Duplicate entries found in 'artist_id' column.")
+    #
+    # # validate that there are no null values, if any raise and exception
+    # if song_df.isnull().values.any():
+    #     raise Exception("Song DataFrame contains null values.")
+    # if album_df.isnull().values.any():
+    #     raise Exception("Album DataFrame contains null values.")
+    # if artist_df.isnull().values.any():
+    #     raise Exception("Artist DataFrame contains null values.")
 
 
 # Function to change date columns to datetime format
@@ -108,10 +124,12 @@ def export_dataframes(song_df, album_df, artist_df):
     # remove datetime -> timezone information to match excel time format
     song_df['added_at'] = song_df['added_at'].dt.tz_localize(None)
     album_df['release_date'] = album_df['release_date'].dt.tz_localize(None)
-
-    song_df.to_excel("files/song_data.xlsx", index=False)
-    album_df.to_excel("files/album_data.xlsx", index=False)
-    artist_df.to_excel("files/artist_data.xlsx", index=False)
+    try:
+        song_df.to_excel("files/song_data.xlsx", index=False)
+        album_df.to_excel("files/album_data.xlsx", index=False)
+        artist_df.to_excel("files/artist_data.xlsx", index=False)
+    except Exception as error:
+        print(f"an error occurred while writing to file {error} \n")
 
 
 # Main function to fetch and process playlist data
