@@ -157,5 +157,6 @@ if __name__ == '__main__':
 
     # tuples unpacking for multiple return values
     song_df, album_df, artist_df = main(playlist_link, json_file_path)
-    print(song_df)
-    # song_df, album_df, artist_df = main(playlist_link, json_file_path)
+    # print(song_df)
+    # print(album_df)
+    # print(artist_df)
